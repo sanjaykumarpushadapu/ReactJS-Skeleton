@@ -3,7 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer'); // Importing the BundleAnalyzerPlugin
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const WebpackBar = require('webpackbar'); // Import webpackbar
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -11,8 +12,8 @@ module.exports = {
   entry: './src/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js', // JavaScript file
-    chunkFilename: isDevelopment ? '[id].js' : '[id].[contenthash].js', // Dynamically imported JS chunks
+    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
+    chunkFilename: isDevelopment ? '[id].js' : '[id].[contenthash].js',
     clean: true, // Clean dist folder before each build
   },
   resolve: {
@@ -21,7 +22,7 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all', // This will split all chunks (including node_modules) into separate files
-      name: 'vendors', // Name of the vendors chunk
+      name: 'vendors',
     },
   },
   module: {
@@ -68,7 +69,14 @@ module.exports = {
     }),
     isDevelopment && new ErrorOverlayPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
-    !isDevelopment && new BundleAnalyzerPlugin({ analyzerMode: 'static' }), // Add bundle analyzer in production mode
+    !isDevelopment && new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+
+    // Add the WebpackBar plugin here for both development and production modes
+    new WebpackBar({
+      name: 'Building...', // Set the name of the progress bar
+      color: '#3498db', // Set the color of the progress bar
+      basic: false, // Show detailed progress (percentage)
+    }),
   ].filter(Boolean),
   devServer: {
     static: path.join(__dirname, 'dist'),
