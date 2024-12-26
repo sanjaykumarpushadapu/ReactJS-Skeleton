@@ -11,7 +11,7 @@ root.render(
   </React.StrictMode>
 );
 
-// Enable HMR (Hot Module Replacement) in development
-if (module.hot) {
-  module.hot.accept();
-}
+// // Enable HMR (Hot Module Replacement) in development
+// if (module.hot) {
+//   module.hot.accept();
+// }
