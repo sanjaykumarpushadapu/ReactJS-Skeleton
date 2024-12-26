@@ -5,22 +5,20 @@
   "repository": "https://github.com/sanjaykumarpushadapu/ReactJS-Skeleton.git",
   "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
   "license": "MIT",
-  
-"scripts": {
-  "start": "yarn format && yarn lint && webpack serve --mode development --open",
-  "build": "yarn format && yarn lint && webpack --mode production",
-  "lint": "eslint --fix --quiet .", 
-  "format": "prettier --write --log-level silent 'src/**/*.{js,jsx,json}' > /dev/null 2>&1",
-  "format:check": "prettier --check \"src/**/*.{js,jsx,json}\""
-},
-
-
+  "scripts": {
+    "start": "yarn format && yarn lint && webpack serve --mode development --open",
+    "build": "yarn format && yarn lint && webpack --mode production",
+    "lint": "eslint --fix --quiet .",
+    "format": "prettier --write --log-level silent 'src/**/*.{js,jsx,json}' > /dev/null 2>&1",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json}\""
+  },
   "dependencies": {
     "querystring": "^0.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
-    "sass": "^1.83.0"
+    "sass": "^1.83.0",
+    "webpackbar": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
