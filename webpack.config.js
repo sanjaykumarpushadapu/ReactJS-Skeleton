@@ -4,7 +4,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const WebpackBar = require('webpackbar');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -70,12 +69,6 @@ module.exports = {
     isDevelopment && new ErrorOverlayPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     !isDevelopment && new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
-    new WebpackBar({
-      name: 'Building...',
-      color: '#3498db',
-      basic: true, // Simpler progress bar
-      profile: true, // Optional: Keep profiling if needed
-    }),
   ].filter(Boolean),
   devServer: {
     static: path.join(__dirname, 'dist'),
