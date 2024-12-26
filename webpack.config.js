@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer'); // Importing the BundleAnalyzerPlugin
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -10,9 +11,9 @@ module.exports = {
   entry: './src/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
-    chunkFilename: isDevelopment ? '[id].js' : '[id].[contenthash].js', // For dynamically imported chunks
-    clean: true, // Clean the output directory before each build
+    filename: isDevelopment ? '[name].js' : '[name].[contenthash].js', // JavaScript file
+    chunkFilename: isDevelopment ? '[id].js' : '[id].[contenthash].js', // Dynamically imported JS chunks
+    clean: true, // Clean dist folder before each build
   },
   resolve: {
     extensions: ['.js', '.jsx'],
@@ -70,6 +71,7 @@ module.exports = {
     }),
     isDevelopment && new ErrorOverlayPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
+    !isDevelopment && new BundleAnalyzerPlugin({ analyzerMode: 'static' }), // Add bundle analyzer in production mode
   ].filter(Boolean),
   devServer: {
     static: path.join(__dirname, 'dist'),
