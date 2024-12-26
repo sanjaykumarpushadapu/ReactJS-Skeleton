@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const WebpackBar = require('webpackbar'); // Import webpackbar
+const WebpackBar = require('webpackbar');
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -14,21 +14,21 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
     chunkFilename: isDevelopment ? '[id].js' : '[id].[contenthash].js',
-    clean: true, // Clean dist folder before each build
+    clean: true,
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
   optimization: {
     splitChunks: {
-      chunks: 'all', // This will split all chunks (including node_modules) into separate files
+      chunks: 'all',
       name: 'vendors',
     },
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/, // Apply babel-loader to .js and .jsx files
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -41,20 +41,20 @@ module.exports = {
         },
       },
       {
-        test: /\.scss$/, // Apply styles to .scss files
+        test: /\.scss$/,
         use: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, // Use style-loader in dev and MiniCssExtractPlugin in prod
+          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
           'sass-loader',
         ],
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg)$/i,
-        type: 'asset/resource', // For image files
+        type: 'asset/resource',
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: 'asset/resource', // For font files
+        type: 'asset/resource',
       },
     ],
   },
@@ -64,18 +64,17 @@ module.exports = {
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
-      filename: isDevelopment ? '[name].css' : '[name].[contenthash].css', // Output CSS file names
-      chunkFilename: isDevelopment ? '[id].css' : '[id].[contenthash].css', // For dynamically imported chunks
+      filename: isDevelopment ? '[name].css' : '[name].[contenthash].css',
+      chunkFilename: isDevelopment ? '[id].css' : '[id].[contenthash].css',
     }),
     isDevelopment && new ErrorOverlayPlugin(),
     isDevelopment && new ReactRefreshWebpackPlugin(),
     !isDevelopment && new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
-
-    // Add the WebpackBar plugin here for both development and production modes
     new WebpackBar({
-      name: 'Building...', // Set the name of the progress bar
-      color: '#3498db', // Set the color of the progress bar
-      basic: false, // Show detailed progress (percentage)
+      name: 'Building...',
+      color: '#3498db',
+      basic: false,
+      profile: true, // Adds timing information
     }),
   ].filter(Boolean),
   devServer: {
@@ -97,4 +96,16 @@ module.exports = {
     },
   },
   devtool: isDevelopment ? 'cheap-module-source-map' : false,
+  stats: {
+    preset: 'minimal', // Use 'minimal' preset for a clean output
+    all: false, // Disable all default stats
+    assets: true, // Show generated assets
+    timings: true, // Show build timings
+    errors: true, // Show errors
+    warnings: true, // Show warnings
+    colors: true, // Enable colored output
+    version: false, // Hide Webpack version
+    hash: false, // Hide build hash
+    entrypoints: false, // Hide entrypoints
+  },
 };

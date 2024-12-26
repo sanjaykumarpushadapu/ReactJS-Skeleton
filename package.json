@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "yarn lint && yarn format && webpack serve --mode development --open",
-    "build": "webpack --mode production",
+    "build": "yarn lint && yarn format && webpack --mode production",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --log-level warn"
   },
