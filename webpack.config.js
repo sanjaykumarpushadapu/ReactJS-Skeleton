@@ -73,8 +73,8 @@ module.exports = {
     new WebpackBar({
       name: 'Building...',
       color: '#3498db',
-      basic: false,
-      profile: true, // Adds timing information
+      basic: true, // Simpler progress bar
+      profile: true, // Optional: Keep profiling if needed
     }),
   ].filter(Boolean),
   devServer: {
@@ -85,19 +85,19 @@ module.exports = {
     open: true,
     historyApiFallback: true,
     client: {
-      logging: 'warn',
+      logging: 'warn', // Limit to warnings
       overlay: {
-        warnings: false,
-        errors: true,
+        warnings: false, // Suppress warnings in the browser overlay
+        errors: true, // Show errors only
       },
     },
     devMiddleware: {
-      stats: 'errors-warnings',
+      stats: 'errors-warnings', // Display only errors and warnings
     },
   },
   devtool: isDevelopment ? 'cheap-module-source-map' : false,
   stats: {
-    preset: 'minimal', // Use 'minimal' preset for a clean output
+    preset: 'minimal', // Minimal output
     all: false, // Disable all default stats
     assets: true, // Show generated assets
     timings: true, // Show build timings
@@ -106,6 +106,8 @@ module.exports = {
     colors: true, // Enable colored output
     version: false, // Hide Webpack version
     hash: false, // Hide build hash
-    entrypoints: false, // Hide entrypoints
+    entrypoints: false, // Hide entry points
+    modules: false, // Hide module details
+    chunkGroups: false, // Hide chunk group details
   },
 };

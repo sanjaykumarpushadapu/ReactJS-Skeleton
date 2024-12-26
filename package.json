@@ -5,19 +5,21 @@
   "repository": "https://github.com/sanjaykumarpushadapu/ReactJS-Skeleton.git",
   "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
   "license": "MIT",
-  "scripts": {
-    "start": "yarn lint && yarn format && webpack serve --mode development --open",
-    "build": "yarn lint && yarn format && webpack --mode production",
-    "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --log-level warn"
-  },
+  
+    "scripts": {
+      "start": "yarn format && yarn lint && webpack serve --mode development --open",
+    "build": "yarn format && yarn lint && webpack --mode production",
+    "lint": "eslint --fix .",  
+    "format": "prettier --write \"src/**/*.{js,jsx,json}\"", 
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json}\""
+    },
+
   "dependencies": {
     "querystring": "^0.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
-    "sass": "^1.83.0",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "sass": "^1.83.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
@@ -45,6 +47,7 @@
     "sass-loader": "^16.0.4",
     "style-loader": "^4.0.0",
     "webpack": "^5.97.1",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "webpackbar": "^7.0.0"

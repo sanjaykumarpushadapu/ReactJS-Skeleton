@@ -8,7 +8,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')); // Correct fo
 root.render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  </React.StrictMode>
 );
 
 // // Enable HMR (Hot Module Replacement) in development
