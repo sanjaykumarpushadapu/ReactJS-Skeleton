@@ -6,9 +6,10 @@
   "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack serve --mode development --open",
+    "start": "yarn lint && yarn format && webpack serve --mode development --open",
     "build": "webpack --mode production",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --log-level warn"
   },
   "dependencies": {
     "querystring": "^0.2.1",
@@ -30,7 +31,6 @@
     "css-loader": "^7.1.2",
     "error-overlay-webpack-plugin": "^1.1.1",
     "eslint": "^9.17.0",
-    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
