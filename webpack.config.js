@@ -10,6 +10,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
+
   return {
     entry: './src/index.jsx',
     output: {
@@ -22,6 +23,44 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.jsx'],
     },
     optimization: {
+      splitChunks: {
+        chunks: 'all', // Split chunks from node_modules and your code
+        maxInitialRequests: 5,
+        minSize: 200000, // Split chunks larger than 200KB
+        cacheGroups: {
+          agGrid: {
+            test: /[\\/]node_modules[\\/](ag-grid-community|ag-grid-react|ag-grid-enterprise)[\\/]/, // Match all ag-grid-* packages
+            name: 'ag-grid', // Bundle all ag-grid related packages into a single chunk
+            chunks: 'all',
+            enforce: true,
+            priority: 20, // Ensure ag-Grid chunk is loaded before others
+            reuseExistingChunk: true, // Reuse existing ag-Grid chunk
+          },
+          reactRedux: {
+            test: /[\\/]node_modules[\\/](react|react-dom|redux)[\\/]/, // Match React, ReactDOM, and Redux
+            name: 'react-redux', // Bundle React, ReactDOM, and Redux into a single chunk
+            chunks: 'all',
+            enforce: true,
+            priority: 10, // Prioritize this chunk after ag-Grid
+            reuseExistingChunk: true, // Reuse existing chunk for React/Redux
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            enforce: true,
+            priority: 5, // Prioritize vendor chunk over others
+            reuseExistingChunk: true, // Reuse existing vendor chunk
+          },
+          common: {
+            test: /[\\/]src[\\/].+\.jsx?$/,
+            name: 'common',
+            chunks: 'all',
+            minChunks: 2,
+            enforce: true,
+          },
+        },
+      },
       minimizer: [
         new ImageMinimizerPlugin({
           test: /\.(jpe?g|png|gif|svg)$/i,
@@ -90,8 +129,8 @@ module.exports = (env, argv) => {
         {
           test: /\.css$/,
           use: [
-            isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, // Use 'style-loader' in dev and 'MiniCssExtractPlugin' in prod
-            'css-loader', // Processes the CSS
+            isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
           ],
         },
         {
@@ -127,6 +166,12 @@ module.exports = (env, argv) => {
           test: /\.(js|css|html|svg)$/,
           algorithm: 'brotliCompress',
           filename: '[path][base].br',
+        }),
+      !isDevelopment &&
+        new CompressionPlugin({
+          test: /\.(js|css|html|svg)$/,
+          algorithm: 'gzip',
+          filename: '[path][base].gz',
         }),
       !isDevelopment && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
