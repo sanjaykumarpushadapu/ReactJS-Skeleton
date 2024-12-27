@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
+import { AgGridReact } from '../ag-grid';
 import PropTypes from 'prop-types';
 
 // Custom Cell Renderer for Radio Buttons
