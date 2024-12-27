@@ -7,6 +7,7 @@ const WebpackBar = require('webpackbar');
 const CompressionPlugin = require('compression-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
@@ -23,34 +24,36 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.jsx'],
     },
     optimization: {
+      // Optimizing chunk splitting for better performance
       splitChunks: {
-        chunks: 'all', // Split chunks from node_modules and your code
-        maxInitialRequests: 5,
-        minSize: 200000, // Split chunks larger than 200KB
+        chunks: 'all',
+        maxInitialRequests: 7, // Increase the number of initial requests
+        minSize: 150000, // Try splitting chunks larger than 150KB
+        maxSize: 200000, // Limit chunk size to 200KB
         cacheGroups: {
           agGrid: {
-            test: /[\\/]node_modules[\\/](ag-grid-community|ag-grid-react|ag-grid-enterprise)[\\/]/, // Match all ag-grid-* packages
-            name: 'ag-grid', // Bundle all ag-grid related packages into a single chunk
+            test: /[\\/]node_modules[\\/](ag-grid-community|ag-grid-react|ag-grid-enterprise)[\\/]/,
+            name: 'ag-grid',
             chunks: 'all',
             enforce: true,
-            priority: 20, // Ensure ag-Grid chunk is loaded before others
-            reuseExistingChunk: true, // Reuse existing ag-Grid chunk
+            priority: 20,
+            reuseExistingChunk: true,
           },
           reactRedux: {
-            test: /[\\/]node_modules[\\/](react|react-dom|redux)[\\/]/, // Match React, ReactDOM, and Redux
-            name: 'react-redux', // Bundle React, ReactDOM, and Redux into a single chunk
+            test: /[\\/]node_modules[\\/](react|react-dom|redux)[\\/]/,
+            name: 'react-redux',
             chunks: 'all',
             enforce: true,
-            priority: 10, // Prioritize this chunk after ag-Grid
-            reuseExistingChunk: true, // Reuse existing chunk for React/Redux
+            priority: 10,
+            reuseExistingChunk: true,
           },
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
             enforce: true,
-            priority: 5, // Prioritize vendor chunk over others
-            reuseExistingChunk: true, // Reuse existing vendor chunk
+            priority: 5,
+            reuseExistingChunk: true,
           },
           common: {
             test: /[\\/]src[\\/].+\.jsx?$/,
@@ -62,6 +65,20 @@ module.exports = (env, argv) => {
         },
       },
       minimizer: [
+        // Minifying the JS code for better performance
+        new TerserPlugin({
+          parallel: true,
+          terserOptions: {
+            compress: {
+              drop_console: true, // Remove console.log statements
+              drop_debugger: true, // Remove debugger statements
+            },
+            output: {
+              comments: false, // Remove comments
+            },
+          },
+        }),
+        // Image optimization
         new ImageMinimizerPlugin({
           test: /\.(jpe?g|png|gif|svg)$/i,
           minimizer: {
@@ -144,6 +161,7 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
+      // Shows a progress bar during build
       !isDevelopment &&
         new WebpackBar({
           name: 'Building',
@@ -155,12 +173,16 @@ module.exports = (env, argv) => {
         template: './public/index.html',
         filename: 'index.html',
       }),
+      // Extracts CSS into separate files in production
       new MiniCssExtractPlugin({
         filename: isDevelopment ? '[name].css' : '[name].[contenthash].css',
         chunkFilename: isDevelopment ? '[id].css' : '[id].[contenthash].css',
       }),
+      // Error overlay plugin (only for development)
       isDevelopment && new ErrorOverlayPlugin(),
+      // React Fast Refresh for development
       isDevelopment && new ReactRefreshWebpackPlugin(),
+      // Compression for production
       !isDevelopment &&
         new CompressionPlugin({
           test: /\.(js|css|html|svg)$/,
@@ -173,6 +195,7 @@ module.exports = (env, argv) => {
           algorithm: 'gzip',
           filename: '[path][base].gz',
         }),
+      // Bundle Analyzer (only for production)
       !isDevelopment && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     devServer: {
@@ -209,7 +232,7 @@ module.exports = (env, argv) => {
       chunkGroups: false,
     },
     performance: {
-      hints: 'warning',
+      hints: 'warning', // Show warnings if assets exceed the size limit
       maxEntrypointSize: 512000, // 500 KB
       maxAssetSize: 512000, // 500 KB
     },
