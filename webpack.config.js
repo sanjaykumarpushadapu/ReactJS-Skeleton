@@ -24,28 +24,18 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.jsx'],
     },
     optimization: {
-      // Code splitting by route
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: 3, // Reduce initial requests to 3
-        minSize: 50000, // Split chunks earlier (down from 100KB)
-        maxSize: 200000, // Reduce max size for chunks (down from 250KB)
+        maxInitialRequests: 5, // Allow multiple initial requests to improve parallel loading
+        minSize: 30000, // Split chunks at a smaller size (30KB)
+        maxSize: 200000, // Split chunks larger than 200KB
         cacheGroups: {
-          // Default group for common modules
-          default: {
-            minChunks: 2,
-            priority: -10,
-            reuseExistingChunk: true,
-          },
-          // Vendor chunk for node_modules
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
             priority: -20,
-            reuseExistingChunk: true,
           },
-          // Shared chunks for your components (you can adjust this further for specific modules)
           common: {
             test: /[\\/]src[\\/].+\.jsx?$/,
             name: 'common',
@@ -55,18 +45,17 @@ module.exports = (env, argv) => {
           },
         },
       },
-      // Minification and removal of unused code
       minimizer: [
         new TerserPlugin({
           parallel: true,
           terserOptions: {
             compress: {
-              drop_console: true, // Remove console statements
-              drop_debugger: true, // Remove debugger statements
-              unused: true, // Remove unused code
+              drop_console: true,
+              drop_debugger: true,
+              unused: true,
             },
             output: {
-              comments: false, // Remove comments
+              comments: false,
             },
           },
         }),
@@ -152,28 +141,17 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
-      // Webpack Progress bar for larger projects
-      !isDevelopment &&
-        new WebpackBar({
-          name: 'Building',
-          color: 'green',
-          profile: true,
-          clear: true,
-        }),
+      !isDevelopment && new WebpackBar({ name: 'Building', color: 'green' }),
       new HtmlWebpackPlugin({
         template: './public/index.html',
         filename: 'index.html',
       }),
-      // Extract CSS in production for larger projects
       new MiniCssExtractPlugin({
         filename: isDevelopment ? '[name].css' : '[name].[contenthash].css',
         chunkFilename: isDevelopment ? '[id].css' : '[id].[contenthash].css',
       }),
-      // Error overlay plugin for development
       isDevelopment && new ErrorOverlayPlugin(),
-      // React Fast Refresh for development
       isDevelopment && new ReactRefreshWebpackPlugin(),
-      // Brotli and Gzip compression for production to save bandwidth
       !isDevelopment &&
         new CompressionPlugin({
           test: /\.(js|css|html|svg)$/,
@@ -186,7 +164,6 @@ module.exports = (env, argv) => {
           algorithm: 'gzip',
           filename: '[path][base].gz',
         }),
-      // Bundle Analyzer to visualize bundle sizes
       !isDevelopment && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     devServer: {
@@ -223,9 +200,9 @@ module.exports = (env, argv) => {
       chunkGroups: false,
     },
     performance: {
-      hints: 'warning', // Show warnings if assets exceed the size limit
-      maxEntrypointSize: 1000000, // 1 MB (increase temporarily)
-      maxAssetSize: 1000000, // 1 MB (increase temporarily)
+      hints: 'warning',
+      maxEntrypointSize: 5000000, // 5MB (5000000 bytes)
+      maxAssetSize: 5000000, // 5MB (5000000 bytes)
     },
   };
 };
