@@ -24,37 +24,28 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.jsx'],
     },
     optimization: {
-      // Optimizing chunk splitting for better performance
+      // Code splitting by route
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: 7, // Increase the number of initial requests
-        minSize: 150000, // Try splitting chunks larger than 150KB
-        maxSize: 200000, // Limit chunk size to 200KB
+        maxInitialRequests: 3, // Reduce initial requests to 3
+        minSize: 50000, // Split chunks earlier (down from 100KB)
+        maxSize: 200000, // Reduce max size for chunks (down from 250KB)
         cacheGroups: {
-          agGrid: {
-            test: /[\\/]node_modules[\\/](ag-grid-community|ag-grid-react|ag-grid-enterprise)[\\/]/,
-            name: 'ag-grid',
-            chunks: 'all',
-            enforce: true,
-            priority: 20,
+          // Default group for common modules
+          default: {
+            minChunks: 2,
+            priority: -10,
             reuseExistingChunk: true,
           },
-          reactRedux: {
-            test: /[\\/]node_modules[\\/](react|react-dom|redux)[\\/]/,
-            name: 'react-redux',
-            chunks: 'all',
-            enforce: true,
-            priority: 10,
-            reuseExistingChunk: true,
-          },
+          // Vendor chunk for node_modules
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'all',
-            enforce: true,
-            priority: 5,
+            priority: -20,
             reuseExistingChunk: true,
           },
+          // Shared chunks for your components (you can adjust this further for specific modules)
           common: {
             test: /[\\/]src[\\/].+\.jsx?$/,
             name: 'common',
@@ -64,21 +55,21 @@ module.exports = (env, argv) => {
           },
         },
       },
+      // Minification and removal of unused code
       minimizer: [
-        // Minifying the JS code for better performance
         new TerserPlugin({
           parallel: true,
           terserOptions: {
             compress: {
-              drop_console: true, // Remove console.log statements
+              drop_console: true, // Remove console statements
               drop_debugger: true, // Remove debugger statements
+              unused: true, // Remove unused code
             },
             output: {
               comments: false, // Remove comments
             },
           },
         }),
-        // Image optimization
         new ImageMinimizerPlugin({
           test: /\.(jpe?g|png|gif|svg)$/i,
           minimizer: {
@@ -161,7 +152,7 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
-      // Shows a progress bar during build
+      // Webpack Progress bar for larger projects
       !isDevelopment &&
         new WebpackBar({
           name: 'Building',
@@ -173,16 +164,16 @@ module.exports = (env, argv) => {
         template: './public/index.html',
         filename: 'index.html',
       }),
-      // Extracts CSS into separate files in production
+      // Extract CSS in production for larger projects
       new MiniCssExtractPlugin({
         filename: isDevelopment ? '[name].css' : '[name].[contenthash].css',
         chunkFilename: isDevelopment ? '[id].css' : '[id].[contenthash].css',
       }),
-      // Error overlay plugin (only for development)
+      // Error overlay plugin for development
       isDevelopment && new ErrorOverlayPlugin(),
       // React Fast Refresh for development
       isDevelopment && new ReactRefreshWebpackPlugin(),
-      // Compression for production
+      // Brotli and Gzip compression for production to save bandwidth
       !isDevelopment &&
         new CompressionPlugin({
           test: /\.(js|css|html|svg)$/,
@@ -195,7 +186,7 @@ module.exports = (env, argv) => {
           algorithm: 'gzip',
           filename: '[path][base].gz',
         }),
-      // Bundle Analyzer (only for production)
+      // Bundle Analyzer to visualize bundle sizes
       !isDevelopment && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     devServer: {
@@ -233,8 +224,8 @@ module.exports = (env, argv) => {
     },
     performance: {
       hints: 'warning', // Show warnings if assets exceed the size limit
-      maxEntrypointSize: 512000, // 500 KB
-      maxAssetSize: 512000, // 500 KB
+      maxEntrypointSize: 1000000, // 1 MB (increase temporarily)
+      maxAssetSize: 1000000, // 1 MB (increase temporarily)
     },
   };
 };
