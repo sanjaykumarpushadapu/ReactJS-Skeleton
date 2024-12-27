@@ -10,8 +10,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-// // Enable HMR (Hot Module Replacement) in development
-// if (module.hot) {
-//   module.hot.accept();
-// }

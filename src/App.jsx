@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Updated import
-import Home from './components/Home';
-import About from './components/About';
-import PageNotFound from './components/PageNotFound';
 
+const Home = React.lazy(() => import('./components/Home'));
+const About = React.lazy(() => import('./components/About'));
+const PageNotFound = React.lazy(() => import('./components/PageNotFound'));
+const AgGridSample = React.lazy(() => import('./components/AgGridSample'));
 const App = () => {
   return (
     <Router>
@@ -12,6 +13,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/grid" element={<AgGridSample />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>

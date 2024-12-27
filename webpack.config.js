@@ -4,6 +4,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const WebpackBar = require('webpackbar');
+const CompressionPlugin = require('compression-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
   return {
@@ -18,10 +22,36 @@ module.exports = (env, argv) => {
       extensions: ['.js', '.jsx'],
     },
     optimization: {
-      splitChunks: {
-        chunks: 'all',
-        name: 'vendors',
-      },
+      minimizer: [
+        new ImageMinimizerPlugin({
+          test: /\.(jpe?g|png|gif|svg)$/i,
+          minimizer: {
+            implementation: ImageMinimizerPlugin.imageminMinify,
+            options: {
+              plugins: [
+                ['gifsicle', { interlaced: true }],
+                ['jpegtran', { progressive: true }],
+                ['optipng', { optimizationLevel: 5 }],
+                [
+                  'svgo',
+                  {
+                    plugins: [
+                      {
+                        name: 'preset-default',
+                        params: {
+                          overrides: {
+                            removeViewBox: false,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                ],
+              ],
+            },
+          },
+        }),
+      ],
     },
     module: {
       rules: [
@@ -42,8 +72,26 @@ module.exports = (env, argv) => {
           test: /\.scss$/,
           use: [
             isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: isDevelopment,
+                modules: {
+                  auto: /\.module\.scss$/,
+                  localIdentName: isDevelopment
+                    ? '[name]__[local]__[hash:base64:5]'
+                    : '[hash:base64]',
+                },
+              },
+            },
             'sass-loader',
+          ],
+        },
+        {
+          test: /\.css$/,
+          use: [
+            isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, // Use 'style-loader' in dev and 'MiniCssExtractPlugin' in prod
+            'css-loader', // Processes the CSS
           ],
         },
         {
@@ -59,10 +107,10 @@ module.exports = (env, argv) => {
     plugins: [
       !isDevelopment &&
         new WebpackBar({
-          name: 'Building', // Customize the name displayed on the progress bar
-          color: 'green', // Customize the progress bar color (optional)
-          profile: true, // Enable profiling only in production mode// Show profiling information during build (optional)
-          clear: true, // clear the screen after each build (optional)
+          name: 'Building',
+          color: 'green',
+          profile: true,
+          clear: true,
         }),
       new HtmlWebpackPlugin({
         template: './public/index.html',
@@ -74,6 +122,13 @@ module.exports = (env, argv) => {
       }),
       isDevelopment && new ErrorOverlayPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
+      !isDevelopment &&
+        new CompressionPlugin({
+          test: /\.(js|css|html|svg)$/,
+          algorithm: 'brotliCompress',
+          filename: '[path][base].br',
+        }),
+      !isDevelopment && new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     devServer: {
       static: path.join(__dirname, 'dist'),
@@ -83,30 +138,35 @@ module.exports = (env, argv) => {
       open: true,
       historyApiFallback: true,
       client: {
-        logging: 'warn', // Limit to warnings
+        logging: 'warn',
         overlay: {
-          warnings: false, // Suppress warnings in the browser overlay
-          errors: true, // Show errors only
+          warnings: false,
+          errors: true,
         },
       },
       devMiddleware: {
-        stats: 'errors-warnings', // Display only errors and warnings
+        stats: 'errors-warnings',
       },
     },
     devtool: isDevelopment ? 'cheap-module-source-map' : false,
     stats: {
-      preset: 'minimal', // Minimal output
-      all: false, // Disable all default stats
-      assets: true, // Show generated assets
-      timings: true, // Show build timings
-      errors: true, // Show errors
-      warnings: true, // Show warnings
-      colors: true, // Enable colored output
-      version: false, // Hide Webpack version
-      hash: false, // Hide build hash
-      entrypoints: false, // Hide entry points
-      modules: false, // Hide module details
-      chunkGroups: false, // Hide chunk group details
+      preset: 'minimal',
+      all: false,
+      assets: true,
+      timings: true,
+      errors: true,
+      warnings: true,
+      colors: true,
+      version: false,
+      hash: false,
+      entrypoints: false,
+      modules: false,
+      chunkGroups: false,
+    },
+    performance: {
+      hints: 'warning',
+      maxEntrypointSize: 512000, // 500 KB
+      maxAssetSize: 512000, // 500 KB
     },
   };
 };
