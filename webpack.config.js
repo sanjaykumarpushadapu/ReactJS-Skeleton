@@ -23,6 +23,9 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.js', '.jsx'],
     },
+    infrastructureLogging: {
+      level: 'warn', // or 'warn', 'error', etc.
+    },
     optimization: {
       splitChunks: {
         chunks: 'all',
@@ -168,11 +171,30 @@ module.exports = (env, argv) => {
     ].filter(Boolean),
     devServer: {
       static: path.join(__dirname, 'dist'),
-      compress: true,
       port: 3000,
+      host: 'localhost', // Explicitly set the host
+      server: {
+        type: 'https', // Specifies HTTPS protocol
+        // options: {
+        //   key: '/path/to/server.key',
+        //   cert: '/path/to/server.crt',
+        //   ca: '/path/to/ca.pem',
+        // },
+      },
+      compress: true,
       hot: true,
       open: true,
       historyApiFallback: true,
+      onListening: (devServer) => {
+        if (!devServer) {
+          throw new Error('webpack-dev-server is not defined');
+        }
+        const protocol =
+          devServer.options.server.type === 'https' ? 'https' : 'http';
+        const host = devServer.options.host || 'localhost';
+        const { port } = devServer.options;
+        console.log(`Server is listening on ${protocol}://${host}:${port}`);
+      },
       client: {
         logging: 'warn',
         overlay: {
@@ -180,6 +202,7 @@ module.exports = (env, argv) => {
           errors: true,
         },
       },
+
       devMiddleware: {
         stats: 'errors-warnings',
       },
