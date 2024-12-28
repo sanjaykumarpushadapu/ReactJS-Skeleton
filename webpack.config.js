@@ -8,7 +8,8 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
-
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { DefinePlugin } = require('webpack');
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
 
@@ -168,6 +169,14 @@ module.exports = (env, argv) => {
           filename: '[path][base].gz',
         }),
       !isDevelopment && new BundleAnalyzerPlugin(),
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: 'public/config', to: 'config' }, // Copy config files to dist folder
+        ],
+      }),
+      new DefinePlugin({
+        __ENV__: JSON.stringify(isDevelopment ? 'Development' : 'Production'), // Inject dynamic environment value
+      }),
     ].filter(Boolean),
     devServer: {
       static: path.join(__dirname, 'dist'),

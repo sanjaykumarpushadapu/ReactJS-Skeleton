@@ -25,6 +25,9 @@ export default [
           jsx: true, // Enable JSX parsing
         },
       },
+      globals: {
+        __ENV__: 'readonly', // Define __ENV__ as a global variable
+      },
     },
   },
   {
@@ -50,7 +53,6 @@ export default [
       'prettier/prettier': 'error', // Flag Prettier formatting issues as errors
 
       // React-specific rules
-      'react/prop-types': 'warn', // Disable prop-types if you're using TypeScript
       'react/react-in-jsx-scope': 'off', // Not needed with React 17+
       'react/jsx-uses-react': 'off', // Not needed with React 17+
       'react/jsx-uses-vars': 'error', // Prevent unused variables in JSX
@@ -58,6 +60,7 @@ export default [
       // React Hooks rules
       'react-hooks/rules-of-hooks': 'error', // Enforce rules of hooks
       'react-hooks/exhaustive-deps': 'warn', // Warn about missing dependencies in useEffect,
+      'react/prop-types': 'error', // Enforce the use of PropTypes
       quotes: 0,
       'no-debugger': 1,
       semi: [1, 'always'],

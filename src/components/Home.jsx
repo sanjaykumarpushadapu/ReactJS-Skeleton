@@ -1,5 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import loadConfig from '../configLoader';
+const Home = () => {
+  const [config, setConfig] = useState(null);
 
-const Home = () => <h2>Welcome to the Home Page..</h2>;
+  useEffect(() => {
+    loadConfig()
+      .then((config) => {
+        setConfig(config);
+        console.log('Loaded configuration:', config);
+      })
+      .catch((err) => {
+        console.error('Failed to load configuration:', err);
+      });
+  }, []);
+
+  if (!config) {
+    return <div>Loading configuration...</div>;
+  }
+
+  return (
+    <>
+      <h2>Welcome to the Home Page..</h2>
+      <h1>App Configuration</h1>
+      <pre>{JSON.stringify(config, null, 2)}</pre>
+    </>
+  );
+};
 
 export default Home;
