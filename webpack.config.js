@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('fs');
+//const fs = require('fs');
 const chalk = require('chalk'); // Importing chalk for styled console output
 const HtmlWebpackPlugin = require('html-webpack-plugin'); // generate the index.html file
 const MiniCssExtractPlugin = require('mini-css-extract-plugin'); //  CSS into separate files for production
@@ -47,16 +47,16 @@ module.exports = (env, argv) => {
       }
     };
     // Load the app settings JSON file dynamically based on the environment
-    const appSettings = JSON.parse(
-      fs.readFileSync(
-        path.resolve(__dirname, `public/config/appSettings.${envName}.json`),
-        'utf-8'
-      )
-    );
+    // const appSettings = JSON.parse(
+    //   fs.readFileSync(
+    //     path.resolve(__dirname, `public/config/appSettings.${envName}.json`),
+    //     'utf-8'
+    //   )
+    // );
 
-    // Extract SSL certificate paths from app settings
-    const sslCertPath = appSettings.ssl?.cert;
-    const sslKeyPath = appSettings.ssl?.key;
+    // // Extract SSL certificate paths from app settings
+    // const sslCertPath = appSettings.ssl?.cert;
+    // const sslKeyPath = appSettings.ssl?.key;
 
     // If SSL certificates are missing in production, log an error and exit the process
     // if (!isDevelopment && (!sslCertPath || !sslKeyPath)) {
@@ -289,13 +289,13 @@ module.exports = (env, argv) => {
         static: path.join(__dirname, 'dist'),
         port: 3000,
         host: 'localhost', // Explicitly set the host to 'localhost'
-        server: {
-          type: 'https', // Serve the application over HTTPS
-          options: {
-            key: sslKeyPath,
-            cert: sslCertPath, // Use the SSL certificates if available
-          },
-        },
+        // server: {
+        //   type: 'https', // Serve the application over HTTPS
+        //   options: {
+        //     key: sslKeyPath,
+        //     cert: sslCertPath, // Use the SSL certificates if available
+        //   },
+        // },
         compress: true, // Enable Gzip compression
         hot: true, // Enable Hot Module Replacement (HMR)
         open: true, // Open the browser automatically
