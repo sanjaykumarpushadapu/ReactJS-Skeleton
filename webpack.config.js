@@ -49,7 +49,62 @@ module.exports = (env, argv) => {
     const fileNaming = isDevelopment
       ? '[name].js' // In development, we use simple names
       : '[name].[contenthash].js'; // In production, use content hashing for cache-busting
+    // Define a function to display build stats from stats.json
+    const displayBuildStats = () => {
+      const statsPath = path.resolve(__dirname, 'dist', 'stats.json');
 
+      // Ensure the stats file exists and is not empty
+      if (!fs.existsSync(statsPath)) {
+        console.error(chalk.red('stats.json file does not exist.'));
+        return;
+      }
+
+      const statsData = fs.readFileSync(statsPath, 'utf-8');
+
+      // Check if the stats.json is empty
+      if (!statsData) {
+        console.error(chalk.red('stats.json file is empty.'));
+        return;
+      }
+
+      try {
+        const stats = JSON.parse(statsData);
+        const errors = stats.errors || [];
+        const warnings = stats.warnings || [];
+
+        // Calculate build size from the stats
+        // const totalBuildSize = stats.assets
+        //   ? stats.assets.reduce((acc, asset) => acc + (asset.size || 0), 0) /
+        //     1024 // Convert size to KB
+        //   : 0;
+
+        console.log(chalk.green(`Build completed in ${stats.time} ms`));
+        // console.log(
+        //   chalk.green(`Total Build Size: ${totalBuildSize.toFixed(2)} KB`)
+        // );
+        console.log(chalk.red(`Errors: ${errors.length}`));
+        console.log(chalk.yellow(`Warnings: ${warnings.length}`));
+
+        // If there are errors or warnings, display them
+        if (errors.length > 0) {
+          console.error(chalk.red('Errors:'));
+          errors.forEach((error) => {
+            console.error(chalk.red(error.message || error));
+          });
+        }
+
+        if (warnings.length > 0) {
+          console.warn(chalk.yellow('Warnings:'));
+          warnings.forEach((warning) => {
+            console.warn(chalk.yellow(warning.message || warning));
+          });
+        }
+      } catch (err) {
+        console.error(
+          chalk.red('Error reading or parsing stats.json:', err.message)
+        );
+      }
+    };
     return {
       entry: './src/index.jsx', // The entry point of the application
       output: {
@@ -233,7 +288,10 @@ module.exports = (env, argv) => {
           new BundleAnalyzerPlugin({
             analyzerMode: 'static',
             openAnalyzer: false,
+            generateStatsFile: true, // Ensure stats.json is generated
+            statsFilename: 'stats.json', // Path where the stats file will be saved
           }),
+
         // Copy configuration files to the dist folder
         new CopyWebpackPlugin({
           patterns: [{ from: 'public/config', to: 'config' }],
@@ -242,6 +300,17 @@ module.exports = (env, argv) => {
         new DefinePlugin({
           __ENV__: JSON.stringify(envName), // Inject dynamic environment value
         }),
+        // After all other plugins, we add our custom plugin to display stats
+        {
+          apply: (compiler) => {
+            // After the build, wait a bit to ensure stats.json is completely written
+            compiler.hooks.done.tap('DisplayBuildStats', () => {
+              setTimeout(() => {
+                displayBuildStats(); // Call the function to display stats after a brief delay
+              }, 1000); // Delay for 1 second to ensure stats.json is fully written
+            });
+          },
+        },
       ].filter(Boolean),
       devServer: {
         // Configuration for webpack-dev-server
@@ -280,14 +349,13 @@ module.exports = (env, argv) => {
       },
       devtool: isDevelopment ? 'cheap-module-source-map' : false, // Enable source maps only in development
       stats: {
-        preset: 'minimal',
+        preset: 'normal', // Use the 'normal' preset for build stats
         assets: false, // Show asset details in the build output
         timings: true, // Show build timings for performance analysis
         errors: true, // Show build errors
         warnings: true, // Show build warnings
         colors: true, // Enable colored output for better readability
-        modules: false, // Hide module details in the build output
-        version: true,
+        modules: false, // Hide module details in the build output,
         performance: true, // Show performance hints in the build output
       },
       performance: {
