@@ -1,5 +1,5 @@
 {
-  "name": "ReactJS-Skeleton",
+  "name": "reactjs-skeleton",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/sanjaykumarpushadapu/ReactJS-Skeleton.git",
@@ -14,11 +14,11 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-  "src/**/*.{js,jsx}": [
-    "eslint --fix --quiet",
-    "prettier --write --log-level silent"
-  ]
-},
+    "src/**/*.{js,jsx}": [
+      "eslint --fix --quiet",
+      "prettier --write --log-level silent"
+    ]
+  },
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.3",
     "ag-grid-community": "^32.3.3",
@@ -64,6 +64,7 @@
     "imagemin-svgo": "^11.0.1",
     "lint-staged": "^15.2.11",
     "mini-css-extract-plugin": "^2.9.2",
+    "postcss-loader": "^8.1.1",
     "prettier": "^3.4.2",
     "react-refresh": "^0.16.0",
     "sass-loader": "^16.0.4",

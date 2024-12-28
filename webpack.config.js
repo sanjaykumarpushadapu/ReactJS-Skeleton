@@ -17,30 +17,6 @@ module.exports = (env, argv) => {
   // Determine if the environment is 'development' or 'production'
   const isDevelopment = argv.mode === 'development';
   const envName = isDevelopment ? 'Development' : 'Production';
-
-  // Custom error handler for Webpack
-  const errorHandler = (err) => {
-    console.error(chalk.red(`ERROR: ${err.message}`));
-    if (err.details) {
-      console.error(chalk.red(`Details: ${err.details}`));
-    }
-    if (err.stack) {
-      console.error(chalk.red(`Stack: ${err.stack}`));
-    }
-
-    // Friendly hints for common errors
-    if (err.message.includes('Module not found')) {
-      console.log(`
-      Fix:
-      1. Ensure the module is installed correctly.
-      2. Check if the path to the module is correct.
-    `);
-    }
-
-    // Other common errors can be handled here
-
-    process.exit(1); // Exit the process after printing the error
-  };
   try {
     // Load the app settings JSON file dynamically based on the environment
     const appSettings = JSON.parse(
@@ -314,6 +290,12 @@ module.exports = (env, argv) => {
       },
     };
   } catch (err) {
-    errorHandler(err);
+    console.error(chalk.red(`ERROR: ${err.message}`));
+    if (err.details) {
+      console.error(chalk.red(`Details: ${err.details}`));
+    }
+    if (err.stack) {
+      console.error(chalk.red(`Stack: ${err.stack}`));
+    }
   }
 };
