@@ -198,7 +198,7 @@ module.exports = (env, argv) => {
           new WebpackBar({
             name: 'Building',
             color: 'green',
-            profile: true,
+            profile: false,
             clear: true,
           }),
         // HTML template generation
@@ -229,7 +229,11 @@ module.exports = (env, argv) => {
             filename: '[path][base].gz',
           }),
         // Bundle analysis in production to optimize code splitting
-        !isDevelopment && new BundleAnalyzerPlugin(),
+        !isDevelopment &&
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'static',
+            openAnalyzer: false,
+          }),
         // Copy configuration files to the dist folder
         new CopyWebpackPlugin({
           patterns: [{ from: 'public/config', to: 'config' }],
@@ -266,7 +270,7 @@ module.exports = (env, argv) => {
         client: {
           logging: 'warn', // Log warnings and errors in the client
           overlay: {
-            warnings: false,
+            warnings: true,
             errors: true, // Display errors in the overlay, but hide warnings
           },
         },
@@ -277,11 +281,14 @@ module.exports = (env, argv) => {
       devtool: isDevelopment ? 'cheap-module-source-map' : false, // Enable source maps only in development
       stats: {
         preset: 'minimal',
-        assets: true, // Show asset details in the build output
+        assets: false, // Show asset details in the build output
         timings: true, // Show build timings for performance analysis
         errors: true, // Show build errors
         warnings: true, // Show build warnings
         colors: true, // Enable colored output for better readability
+        modules: false, // Hide module details in the build output
+        version: true,
+        performance: true, // Show performance hints in the build output
       },
       performance: {
         hints: 'warning',
