@@ -23,18 +23,6 @@ module.exports = (env, argv) => {
       try {
         const errors = stats.hasErrors() ? stats.compilation.errors : [];
         const warnings = stats.hasWarnings() ? stats.compilation.warnings : [];
-
-        // // Calculate build size from the stats
-        // const totalBuildSize = stats.compilation.assets
-        //   ? Object.values(stats.compilation.assets).reduce(
-        //       (acc, asset) => acc + (asset.size || 0),
-        //       0
-        //     ) / 1024 // Convert size to KB
-        //   : 0;
-
-        // console.log(
-        //   chalk.green(`Total Build Size: ${totalBuildSize.toFixed(2)} KB`)
-        // );
         console.log(chalk.red(`Errors: ${errors.length}`));
         console.log(chalk.yellow(`Warnings: ${warnings.length}`));
 
@@ -286,7 +274,7 @@ module.exports = (env, argv) => {
           __ENV__: JSON.stringify(envName), // Inject dynamic environment value
         }),
         // After all other plugins, we add our custom plugin to display stats
-        {
+        !isDevelopment && {
           // Hook into Webpack's done event to call the displayBuildStats function after the build is complete
           apply: (compiler) => {
             // Use the done hook, which triggers when the build is completed
