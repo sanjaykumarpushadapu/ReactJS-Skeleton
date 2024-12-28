@@ -13,6 +13,80 @@ const TerserPlugin = require('terser-webpack-plugin'); // Plugin for JS minifica
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // copy static files (e.g., configuration files)
 const { DefinePlugin } = require('webpack'); // define global constants (like environment variables)
 
+//Wait for the stats file to be written
+const waitForFile = (filePath, retries = 5, delay = 1000) => {
+  return new Promise((resolve, reject) => {
+    const attempt = () => {
+      if (fs.existsSync(filePath)) {
+        const statsData = fs.readFileSync(filePath, 'utf-8');
+        // Check if the file content is valid JSON and not empty
+        try {
+          JSON.parse(statsData);
+          resolve();
+        } catch {
+          if (retries > 0) {
+            // console.log(
+            //   chalk.yellow(
+            //     `Retrying to read stats.json... ${retries} retries left`
+            //   )
+            // );
+            setTimeout(attempt, delay); // Retry after a delay
+          } else {
+            reject(new Error('stats.json is empty or invalid JSON.'));
+          }
+        }
+      } else if (retries > 0) {
+        console.log(chalk.yellow('Waiting for stats.json to be generated...'));
+        setTimeout(attempt, delay); // Retry after a delay
+      } else {
+        reject(new Error('stats.json file does not exist.'));
+      }
+    };
+
+    attempt();
+  });
+};
+
+const displayBuildStats = () => {
+  const statsPath = path.resolve(__dirname, 'dist', 'stats.json');
+
+  waitForFile(statsPath)
+    .then(() => {
+      const statsData = fs.readFileSync(statsPath, 'utf-8');
+      const stats = JSON.parse(statsData);
+      const errors = stats.errors || [];
+      const warnings = stats.warnings || [];
+
+      const totalBuildSize = stats.assets
+        ? stats.assets.reduce((acc, asset) => acc + (asset.size || 0), 0) / 1024 // Convert to KB
+        : 0;
+
+      console.log(chalk.green(`Build completed in ${stats.time} ms`));
+      console.log(
+        chalk.green(`Total Build Size: ${totalBuildSize.toFixed(2)} KB`)
+      );
+      console.log(chalk.red(`Errors: ${errors.length}`));
+      console.log(chalk.yellow(`Warnings: ${warnings.length}`));
+
+      // If errors or warnings, display them
+      if (errors.length > 0) {
+        console.error(chalk.red('Errors:'));
+        errors.forEach((error) => {
+          console.error(chalk.red(error.message || error));
+        });
+      }
+
+      if (warnings.length > 0) {
+        console.warn(chalk.yellow('Warnings:'));
+        warnings.forEach((warning) => {
+          console.warn(chalk.yellow(warning.message || warning));
+        });
+      }
+    })
+    .catch((err) => {
+      console.error(chalk.red(`Error: ${err.message}`));
+    });
+};
 module.exports = (env, argv) => {
   // Determine if the environment is 'development' or 'production'
   const isDevelopment = argv.mode === 'development';
@@ -49,62 +123,7 @@ module.exports = (env, argv) => {
     const fileNaming = isDevelopment
       ? '[name].js' // In development, we use simple names
       : '[name].[contenthash].js'; // In production, use content hashing for cache-busting
-    // Define a function to display build stats from stats.json
-    const displayBuildStats = () => {
-      const statsPath = path.resolve(__dirname, 'dist', 'stats.json');
 
-      // Ensure the stats file exists and is not empty
-      if (!fs.existsSync(statsPath)) {
-        console.error(chalk.red('stats.json file does not exist.'));
-        return;
-      }
-
-      const statsData = fs.readFileSync(statsPath, 'utf-8');
-
-      // Check if the stats.json is empty
-      if (!statsData) {
-        console.error(chalk.red('stats.json file is empty.'));
-        return;
-      }
-
-      try {
-        const stats = JSON.parse(statsData);
-        const errors = stats.errors || [];
-        const warnings = stats.warnings || [];
-
-        // Calculate build size from the stats
-        // const totalBuildSize = stats.assets
-        //   ? stats.assets.reduce((acc, asset) => acc + (asset.size || 0), 0) /
-        //     1024 // Convert size to KB
-        //   : 0;
-
-        console.log(chalk.green(`Build completed in ${stats.time} ms`));
-        // console.log(
-        //   chalk.green(`Total Build Size: ${totalBuildSize.toFixed(2)} KB`)
-        // );
-        console.log(chalk.red(`Errors: ${errors.length}`));
-        console.log(chalk.yellow(`Warnings: ${warnings.length}`));
-
-        // If there are errors or warnings, display them
-        if (errors.length > 0) {
-          console.error(chalk.red('Errors:'));
-          errors.forEach((error) => {
-            console.error(chalk.red(error.message || error));
-          });
-        }
-
-        if (warnings.length > 0) {
-          console.warn(chalk.yellow('Warnings:'));
-          warnings.forEach((warning) => {
-            console.warn(chalk.yellow(warning.message || warning));
-          });
-        }
-      } catch (err) {
-        console.error(
-          chalk.red('Error reading or parsing stats.json:', err.message)
-        );
-      }
-    };
     return {
       entry: './src/index.jsx', // The entry point of the application
       output: {
@@ -302,12 +321,10 @@ module.exports = (env, argv) => {
         }),
         // After all other plugins, we add our custom plugin to display stats
         {
+          // Hook into Webpack's done event to call the displayBuildStats function after the build is complete
           apply: (compiler) => {
-            // After the build, wait a bit to ensure stats.json is completely written
             compiler.hooks.done.tap('DisplayBuildStats', () => {
-              setTimeout(() => {
-                displayBuildStats(); // Call the function to display stats after a brief delay
-              }, 1000); // Delay for 1 second to ensure stats.json is fully written
+              displayBuildStats(); // Call the function to display stats
             });
           },
         },
