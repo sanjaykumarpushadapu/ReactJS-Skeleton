@@ -55,19 +55,19 @@ module.exports = (env, argv) => {
     const sslKeyPath = appSettings.ssl?.key;
 
     // If SSL certificates are missing in production, log an error and exit the process
-    if (!isDevelopment && (!sslCertPath || !sslKeyPath)) {
-      console.error(
-        chalk.red(
-          `ERROR: SSL certificate paths not found in ${chalk.yellow(
-            path.resolve(__dirname, `public/config/appSettings.${envName}.json`)
-          )}`
-        )
-      );
-      console.error(
-        chalk.yellow('Ensure SSL cert and key are correctly configured.')
-      );
-      process.exit(1);
-    }
+    // if (!isDevelopment && (!sslCertPath || !sslKeyPath)) {
+    //   console.error(
+    //     chalk.red(
+    //       `ERROR: SSL certificate paths not found in ${chalk.yellow(
+    //         path.resolve(__dirname, `public/config/appSettings.${envName}.json`)
+    //       )}`
+    //     )
+    //   );
+    //   console.error(
+    //     chalk.yellow('Ensure SSL cert and key are correctly configured.')
+    //   );
+    //   process.exit(1);
+    // }
 
     // Common file naming pattern for JS files, differing based on environment
     const fileNaming = isDevelopment
@@ -218,7 +218,13 @@ module.exports = (env, argv) => {
       },
       plugins: [
         // Display a progress bar during the build process (in production only)
-        !isDevelopment && new WebpackBar({ name: 'Building', color: 'green' }),
+        !isDevelopment &&
+          new WebpackBar({
+            name: 'Building',
+            color: 'green',
+            profile: true,
+            clear: true,
+          }),
         // HTML template generation
         new HtmlWebpackPlugin({
           template: './public/index.html',
