@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
@@ -12,6 +13,21 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
+  const envName = isDevelopment ? 'Development' : 'Production';
+  // Load the app settings JSON file
+  const appSettingsPath = path.resolve(
+    __dirname,
+    `public/config/appSettings.${envName}.json`
+  );
+  const appSettings = JSON.parse(fs.readFileSync(appSettingsPath, 'utf-8'));
+
+  // Extract SSL cert and key paths from app settings
+  const sslCertPath = appSettings.ssl?.cert;
+  const sslKeyPath = appSettings.ssl?.key;
+
+  //  if (!sslCertPath || !sslKeyPath) {
+  //    throw new Error(`SSL certificate paths not found in ${appSettingsPath}`);
+  //  }
 
   return {
     entry: './src/index.jsx',
@@ -184,11 +200,11 @@ module.exports = (env, argv) => {
       host: 'localhost', // Explicitly set the host
       server: {
         type: 'https', // Specifies HTTPS protocol
-        // options: {
-        //   key: '/path/to/server.key',
-        //   cert: '/path/to/server.crt',
-        //   ca: '/path/to/ca.pem',
-        // },
+        options: {
+          key: sslKeyPath,
+          cert: sslCertPath,
+          // ca: '/path/to/ca.pem',
+        },
       },
       compress: true,
       hot: true,
