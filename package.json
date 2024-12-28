@@ -10,8 +10,15 @@
     "build": "yarn format && yarn lint && webpack --mode production",
     "lint": "eslint --fix --quiet .",
     "format": "prettier --write --log-level silent 'src/**/*.{js,jsx,json}' > /dev/null 2>&1",
-    "format:check": "prettier --check \"src/**/*.{js,jsx,json}\""
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json}\"",
+    "prepare": "husky install"
   },
+  "lint-staged": {
+  "src/**/*.{js,jsx}": [
+    "eslint --fix --quiet",
+    "prettier --write --log-level silent"
+  ]
+},
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.3",
     "ag-grid-community": "^32.3.3",
@@ -48,12 +55,14 @@
     "gifsicle": "^7.0.1",
     "globals": "^15.14.0",
     "html-webpack-plugin": "^5.6.3",
+    "husky": "^8.0.0",
     "image-minimizer-webpack-plugin": "^4.1.3",
     "imagemin": "^9.0.0",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-jpegtran": "^8.0.0",
     "imagemin-optipng": "^8.0.0",
     "imagemin-svgo": "^11.0.1",
+    "lint-staged": "^15.2.11",
     "mini-css-extract-plugin": "^2.9.2",
     "prettier": "^3.4.2",
     "react-refresh": "^0.16.0",
