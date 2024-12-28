@@ -349,7 +349,7 @@ module.exports = (env, argv) => {
       },
       devtool: isDevelopment ? 'cheap-module-source-map' : false, // Enable source maps only in development
       stats: {
-        preset: 'normal', // Use the 'normal' preset for build stats
+        preset: 'minimal', // Use the 'minimal' preset for build stats
         assets: false, // Show asset details in the build output
         timings: true, // Show build timings for performance analysis
         errors: true, // Show build errors
