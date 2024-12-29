@@ -2,8 +2,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../constants'; // Your API base URL
 
-
-
 // Function to get the token from localStorage
 const getToken = () => {
   return localStorage.getItem('authToken');
@@ -13,7 +11,6 @@ const getToken = () => {
 const removeToken = () => {
   return localStorage.removeItem('authToken');
 };
-
 
 // Centralized Axios instance with base URL
 const api = axios.create({
@@ -48,7 +45,9 @@ api.interceptors.response.use(
 
       // Handle Unauthorized (401) - Token might have expired or invalid
       if (status === 401) {
-        console.error('Unauthorized: Token might be expired. Please log in again.');
+        console.error(
+          'Unauthorized: Token might be expired. Please log in again.'
+        );
         handleTokenExpiration(); // Clear token and redirect to login
       }
 
@@ -59,7 +58,9 @@ api.interceptors.response.use(
 
       // Handle other errors if needed
       if (status === 403) {
-        console.error('Forbidden: You do not have permission to access this resource.');
+        console.error(
+          'Forbidden: You do not have permission to access this resource.'
+        );
       }
     }
 

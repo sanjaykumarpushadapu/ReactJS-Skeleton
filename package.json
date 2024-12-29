@@ -6,8 +6,9 @@
   "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "yarn format && yarn lint && webpack serve --mode development --open",
-    "build": "yarn format && yarn lint && webpack --mode production",
+    "check:node_modules": "node scripts/checkNodeModules.js",
+    "start": "yarn check:node_modules && yarn format && yarn lint && webpack serve --mode development --open",
+    "build": "yarn check:node_modules && yarn format && yarn lint && webpack --mode production",
     "lint": "eslint --fix --quiet .",
     "format": "prettier --write --log-level silent 'src/**/*.{js,jsx,json}' > /dev/null 2>&1",
     "format:check": "prettier --check \"src/**/*.{js,jsx,json}\"",

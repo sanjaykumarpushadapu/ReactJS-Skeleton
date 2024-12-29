@@ -5,7 +5,7 @@ import { startLoading, finishLoading, setError } from '../asyncSlice'; // Import
 
 // Fetch posts
 export const fetchPosts = createAsyncThunk(
-  'posts/fetchPosts',
+  'posts/fetchPosts', // Action name
   async (_, { dispatch, rejectWithValue }) => {
     dispatch(startLoading()); // Dispatch startLoading action globally
     try {
@@ -22,7 +22,7 @@ export const fetchPosts = createAsyncThunk(
 
 // Create a post
 export const createPost = createAsyncThunk(
-  'posts/createPost',
+  'posts/createPost', // Action name
   async (postData, { dispatch, rejectWithValue }) => {
     dispatch(startLoading()); // Dispatch startLoading action globally
     try {
@@ -39,7 +39,7 @@ export const createPost = createAsyncThunk(
 
 // Delete a post
 export const deletePost = createAsyncThunk(
-  'posts/deletePost',
+  'posts/deletePost', // Action name
   async (postId, { dispatch, rejectWithValue }) => {
     dispatch(startLoading()); // Dispatch startLoading action globally
     try {

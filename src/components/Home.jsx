@@ -9,7 +9,6 @@ const Home = () => {
     loadConfig()
       .then((config) => {
         setConfig(config);
-        console.log('Loaded configuration:', config);
       })
       .catch((err) => {
         console.error('Failed to load configuration:', err);

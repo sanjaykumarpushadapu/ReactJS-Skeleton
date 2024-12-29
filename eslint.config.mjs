@@ -10,7 +10,7 @@ export default [
     ignores: ['dist/**', 'node_modules/**'], // Exclude dist and node_modules from linting
   },
   {
-    files: ['webpack.config.js'],
+    files: ['webpack.config.js', 'scripts/**/*.js'], // Ensure the webpack.config.js and scripts folder are being linted
     languageOptions: {
       globals: globals.node, // Enable Node.js globals for webpack.config.js
       sourceType: 'script',
