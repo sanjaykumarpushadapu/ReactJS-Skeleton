@@ -259,10 +259,12 @@ module.exports = (env, argv) => {
         // Bundle analysis in production to optimize code splitting
         !isDevelopment &&
           new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
-            openAnalyzer: false,
-            generateStatsFile: true, // Ensure stats.json is generated
-            statsFilename: 'stats.json', // Path where the stats file will be saved
+            analyzerMode: 'static', // Generates a static HTML report
+            reportFilename: 'report.html', // Path for the report
+            statsFilename: 'stats.json', // Path for the stats file
+            openAnalyzer: false, // Don't automatically open the analyzer in the browser
+            generateStatsFile: true, // Generate stats.json file
+            logLevel: 'silent', // Set the log level to silent to suppress all output
           }),
 
         // Copy configuration files to the dist folder
