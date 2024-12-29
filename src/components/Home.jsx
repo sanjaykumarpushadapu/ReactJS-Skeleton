@@ -22,8 +22,8 @@ const Home = () => {
   return (
     <>
       <h2>Welcome to the Home Page..</h2>
-      <PostList></PostList>
-      <PostForm></PostForm>
+      <PostList />
+      <PostForm />
       <h1>App Configuration</h1>
       <pre>{JSON.stringify(config, null, 2)}</pre>
     </>

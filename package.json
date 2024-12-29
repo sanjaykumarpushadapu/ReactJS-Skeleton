@@ -5,15 +5,14 @@
   "repository": "https://github.com/sanjaykumarpushadapu/ReactJS-Skeleton.git",
   "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
   "license": "MIT",
-  "scripts": {
-    "check:node_modules": "node scripts/checkNodeModules.js",
-    "start": "yarn check:node_modules && yarn format && yarn lint && webpack serve --mode development --open",
-    "build": "yarn check:node_modules && yarn format && yarn lint && webpack --mode production",
-    "lint": "eslint --fix --quiet .",
-    "format": "prettier --write --log-level silent 'src/**/*.{js,jsx,json}' > /dev/null 2>&1",
-    "format:check": "prettier --check \"src/**/*.{js,jsx,json}\"",
-    "prepare": "husky install"
-  },
+"scripts": {
+  "check:node_modules": "node scripts/checkNodeModules.js",
+  "format": "node scripts/format.js",
+  "lint": "node scripts/lint.js",
+  "start": "yarn check:node_modules && yarn format && yarn lint && webpack serve --mode development --open",
+  "build": "yarn check:node_modules && yarn format && yarn lint && webpack --mode production",
+  "prepare": "husky install"
+},
   "lint-staged": {
     "src/**/*.{js,jsx}": [
       "eslint --fix --quiet",
