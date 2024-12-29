@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createPost } from '../../redux/slices/postsSlice'; // Import the createPost action
+import { createPost } from '../../redux/posts/postThunk'; // Import the createPost action
 
 const PostForm = () => {
   const dispatch = useDispatch();
