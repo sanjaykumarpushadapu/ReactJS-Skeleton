@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import loadConfig from '../configLoader';
+import PostList from './posts/PostList';
+import PostForm from './posts/PostForm';
 const Home = () => {
   const [config, setConfig] = useState(null);
 
@@ -21,6 +23,8 @@ const Home = () => {
   return (
     <>
       <h2>Welcome to the Home Page..</h2>
+      <PostList></PostList>
+      <PostForm></PostForm>
       <h1>App Configuration</h1>
       <pre>{JSON.stringify(config, null, 2)}</pre>
     </>
