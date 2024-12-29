@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import postsReducer from './posts/postsSlice';
+import postReducer from './posts/postsSlice';
+import asyncReducer from './asyncSlice';  // Import the async slice
 const store = configureStore({
   reducer: {
-    posts: postsReducer,
+    posts: postReducer,
+    async: asyncReducer,  // Add async slice to the root reducer
   },
 });
 

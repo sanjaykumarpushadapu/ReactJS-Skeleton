@@ -1,10 +1,9 @@
+// api/axios.js
 import axios from 'axios';
-import { API_BASE_URL, TIMEOUT } from '../constants';
-
-// Create an Axios instance with base URL and timeout settings
+import { API_BASE_URL } from '../constants';
+// Centralized Axios instance with base URL
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: TIMEOUT,
+  baseURL: API_BASE_URL, // Replace with your API base URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -43,7 +42,8 @@ api.interceptors.response.use(
         console.error('Internal Server Error: Something went wrong.');
       }
     }
-    return Promise.reject(error);
+    // Handle global API errors here
+    return Promise.reject(error.response || error.message);
   }
 );
 
