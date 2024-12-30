@@ -18,34 +18,6 @@ module.exports = (env, argv) => {
   const isDevelopment = argv.mode === 'development';
   const envName = isDevelopment ? 'Development' : 'Production';
   try {
-    // Define a function to display build stats directly from the stats object
-    const displayBuildStats = (stats) => {
-      try {
-        const errors = stats.hasErrors() ? stats.compilation.errors : [];
-        const warnings = stats.hasWarnings() ? stats.compilation.warnings : [];
-        console.log(chalk.red(`Errors: ${errors.length}`));
-        console.log(chalk.yellow(`Warnings: ${warnings.length}`));
-
-        // If there are errors or warnings, display them
-        if (errors.length > 0) {
-          console.error(chalk.red('Errors:'));
-          errors.forEach((error) => {
-            console.error(chalk.red(error.message || error));
-          });
-        }
-
-        if (warnings.length > 0) {
-          console.warn(chalk.yellow('Warnings:'));
-          warnings.forEach((warning) => {
-            console.warn(chalk.yellow(warning.message || warning));
-          });
-        }
-      } catch (err) {
-        console.error(
-          chalk.red('Error reading or parsing stats:', err.message)
-        );
-      }
-    };
     // Load the app settings JSON file dynamically based on the environment
     // const appSettings = JSON.parse(
     //   fs.readFileSync(
@@ -275,16 +247,6 @@ module.exports = (env, argv) => {
         new DefinePlugin({
           __ENV__: JSON.stringify(envName), // Inject dynamic environment value
         }),
-        // After all other plugins, we add our custom plugin to display stats
-        !isDevelopment && {
-          // Hook into Webpack's done event to call the displayBuildStats function after the build is complete
-          apply: (compiler) => {
-            // Use the done hook, which triggers when the build is completed
-            compiler.hooks.done.tap('DisplayBuildStats', (stats) => {
-              displayBuildStats(stats); // Call the function to display stats after build
-            });
-          },
-        },
       ].filter(Boolean),
       devServer: {
         // Configuration for webpack-dev-server
