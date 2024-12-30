@@ -3,7 +3,7 @@ const { execSync } = require('child_process');
 
 try {
   console.log('\x1b[33mRunning Prettier...\x1b[0m');
-  execSync("npx prettier --write --log-level silent 'src/**/*.{js,jsx,json}'", {
+  execSync("npx prettier --write --log-level silent '**/*.{js,jsx,json,mjs}'", {
     stdio: 'inherit',
   });
   console.log('\x1b[32mCode formatted successfully!\x1b[0m');

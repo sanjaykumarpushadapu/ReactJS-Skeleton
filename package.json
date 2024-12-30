@@ -5,13 +5,13 @@
   "repository": "https://github.com/sanjaykumarpushadapu/ReactJS-Skeleton.git",
   "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
   "license": "MIT",
-"scripts": {
-    "webpackDev": "node scripts/webpackDev.js",  
-    "webpackBuild": "node scripts/webpackBuild.js",  
-    "start": "yarn webpackDev", 
-    "build": "yarn webpackBuild",  
+  "scripts": {
+    "webpackDev": "node scripts/webpackDev.js",
+    "webpackBuild": "node scripts/webpackBuild.js",
+    "start": "yarn webpackDev",
+    "build": "yarn webpackBuild",
     "prepare": "husky install"
-},
+  },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
       "eslint --fix --quiet",
