@@ -1,5 +1,5 @@
 const { execSync } = require('child_process');
-
+const { preBuild } = require('./preBuild');
 // Function to run commands
 const runCommand = (command) => {
   try {
@@ -11,9 +11,7 @@ const runCommand = (command) => {
 };
 
 // Run common tasks: check node_modules, format, lint
-runCommand('node scripts/checkNodeModules.js');
-runCommand('node scripts/format.js');
-runCommand('node scripts/lint.js');
+preBuild();
 
 // Start Webpack in development mode
 runCommand('webpack serve --mode development --open');

@@ -1,19 +1,17 @@
-const { execSync } = require('child_process');
+const { checkNodeModules } = require('./checkNodeModules');
+const { runPrettier } = require('./format');
+const { runLint } = require('./lint');
 
-const runCommand = (command) => {
-  try {
-    execSync(command, { stdio: 'inherit' });
-  } catch {
-    console.error(`Error running command: ${command}`);
-    process.exit(1);
-  }
+function preBuild() {
+  // Check node_modules
+  checkNodeModules();
+
+  // Run format
+  runPrettier();
+
+  // Run lint
+  runLint();
+}
+module.exports = {
+  preBuild, // Ensure this is exported
 };
-
-// Check node_modules
-runCommand('node scripts/checkNodeModules.js');
-
-// Run format
-runCommand('node scripts/format.js');
-
-// Run lint
-runCommand('node scripts/lint.js');
