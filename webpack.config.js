@@ -12,7 +12,6 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer'); // analyze 
 const TerserPlugin = require('terser-webpack-plugin'); // Plugin for JS minification in production
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // copy static files (e.g., configuration files)
 const { DefinePlugin } = require('webpack'); // define global constants (like environment variables)
-const HMRLoggingPlugin = require('./scripts/HMRLoggingPlugin'); // Custom Webpack plugin for HMR logging
 
 module.exports = (env, argv) => {
   // Determine if the environment is 'development' or 'production'
@@ -248,7 +247,6 @@ module.exports = (env, argv) => {
         new DefinePlugin({
           __ENV__: JSON.stringify(envName), // Inject dynamic environment value
         }),
-        new HMRLoggingPlugin(),
       ].filter(Boolean),
       devServer: {
         // Configuration for webpack-dev-server
@@ -275,9 +273,11 @@ module.exports = (env, argv) => {
           );
         },
         client: {
-          overlay: true,
-          logging: 'info', // Enable detailed logging for client-side
-          progress: true, // Enable progress indicator
+          logging: 'warn', // Log warnings and errors in the client
+          overlay: {
+            warnings: true,
+            errors: true, // Display errors in the overlay, but hide warnings
+          },
         },
         devMiddleware: {
           stats: 'errors-warnings', // Display errors and warnings only in development mode
