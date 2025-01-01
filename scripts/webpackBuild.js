@@ -11,7 +11,6 @@ const runCommand = (command) => {
 };
 
 // Run common tasks: check node_modules, format, lint
-// Run common tasks: check node_modules, format, lint
 preBuild();
 
 // Build Webpack in production mode
