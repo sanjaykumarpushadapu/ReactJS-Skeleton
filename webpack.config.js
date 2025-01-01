@@ -7,7 +7,6 @@ const ErrorOverlayPlugin = require('error-overlay-webpack-plugin'); // show erro
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'); //React Fast Refresh (HMR) in development
 const WebpackBar = require('webpackbar'); // show a progress bar during the build process
 const CompressionPlugin = require('compression-webpack-plugin'); // Plugin for compressing assets using Brotli and Gzip
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin'); // Plugin for image optimization (compressing images)
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer'); // analyze the final bundle size
 const TerserPlugin = require('terser-webpack-plugin'); // Plugin for JS minification in production
 const CopyWebpackPlugin = require('copy-webpack-plugin'); // copy static files (e.g., configuration files)
@@ -103,35 +102,6 @@ module.exports = (env, argv) => {
               },
               output: {
                 comments: false, // Remove comments from the output
-              },
-            },
-          }),
-          // Minimize images (JPEG, PNG, GIF, SVG) for production
-          new ImageMinimizerPlugin({
-            test: /\.(jpe?g|png|gif|svg)$/i,
-            minimizer: {
-              implementation: ImageMinimizerPlugin.imageminMinify,
-              options: {
-                plugins: [
-                  ['gifsicle', { interlaced: true }],
-                  ['jpegtran', { progressive: true }],
-                  ['optipng', { optimizationLevel: 5 }],
-                  [
-                    'svgo',
-                    {
-                      plugins: [
-                        {
-                          name: 'preset-default',
-                          params: {
-                            overrides: {
-                              removeViewBox: false, // Keep the 'viewBox' in SVGs for compatibility
-                            },
-                          },
-                        },
-                      ],
-                    },
-                  ],
-                ],
               },
             },
           }),
