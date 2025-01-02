@@ -1,0 +1,21 @@
+/* Typography styles */
+@use '../variables/colors' as *;
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+  color: $primary-text-color;
+}
+
+/* _typography.scss */
+h1, h2, h3, h4, h5, h6 {
+  color: $primary-text-color;  /* This should now work */
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}

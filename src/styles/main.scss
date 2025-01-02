@@ -1,0 +1,9 @@
+
+@use './variables/colors' as *;   /* Import color variables first */
+@use './variables/fonts' as *;    /* Import font variables */
+@use './variables/spacing' as *;  /* Import spacing variables */
+@use 'base/normalize' as *;     /* Then import other base files */
+@use './base/typography' as *;    /* Typography can now use the variables */
+@use './base/globals' as *;
+@use './base/utilities' as *;
+@use './mixins/flexbox' as *;

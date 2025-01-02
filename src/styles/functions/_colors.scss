@@ -1,0 +1,8 @@
+/* Color manipulation functions */
+@function lighten($color, $amount: 10%) {
+  @return mix(white, $color, $amount);
+}
+
+@function darken($color, $amount: 10%) {
+  @return mix(black, $color, $amount);
+}

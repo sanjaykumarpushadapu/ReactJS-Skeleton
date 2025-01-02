@@ -1,0 +1,11 @@
+/* Flexbox mixin */
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  @include flex-center;
+  height: 100vh;
+}

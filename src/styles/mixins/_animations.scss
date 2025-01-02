@@ -1,0 +1,17 @@
+/* Animation mixins */
+@mixin fade-in($duration: 1s) {
+  animation: fadeIn $duration ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.button {
+  @include fade-in(0.5s);
+}

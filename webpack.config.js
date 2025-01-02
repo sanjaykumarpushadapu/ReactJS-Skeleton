@@ -127,7 +127,9 @@ module.exports = (env, argv) => {
           {
             test: /\.scss$/,
             use: [
-              isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, // Use style-loader in development and MiniCssExtractPlugin in production
+              // In development, use style-loader to inject styles into the DOM
+              isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
+
               {
                 loader: 'css-loader',
                 options: {
@@ -135,11 +137,13 @@ module.exports = (env, argv) => {
                   modules: {
                     auto: /\.module\.scss$/, // Enable CSS modules for .module.scss files
                     localIdentName: isDevelopment
-                      ? '[name]__[local]__[hash:base64:5]'
-                      : '[hash:base64]', // Custom class name formatting for better obfuscation in production
+                      ? '[name]__[local]__[hash:base64:5]' // Development class names format
+                      : '[hash:base64]', // Production class names format (obfuscation)
                   },
                 },
               },
+
+              // SASS loader to process SCSS files
               'sass-loader', // Convert SCSS to CSS
             ],
           },

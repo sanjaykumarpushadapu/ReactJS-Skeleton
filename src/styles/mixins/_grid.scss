@@ -1,0 +1,10 @@
+/* 12-column grid system */
+@mixin grid($columns: 12, $gap: 16px) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+.grid-container {
+  @include grid(12, 20px);
+}

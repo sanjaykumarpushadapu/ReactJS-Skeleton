@@ -1,0 +1,8 @@
+/* Math helper functions */
+@function rem($px) {
+  @return $px / 16 + rem;
+}
+
+@function percentage($part, $total) {
+  @return ($part / $total) * 100;
+}
