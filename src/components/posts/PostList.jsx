@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts } from '../../redux/posts/postThunk';
-
+import logger from '../../utils/logger'; // Import the logger utility
 const PostList = () => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts.posts);
@@ -10,6 +10,10 @@ const PostList = () => {
   const error = useSelector((state) => state.async.error); // Assuming error is tracked globally
 
   useEffect(() => {
+    logger.info('Application has started.');
+    logger.warn('This is a warning log.');
+    logger.error('An error occurred.', new Error('Sample error'));
+    logger.debug('Debugging information.', { additional: 'details' });
     dispatch(fetchPosts()); // Dispatch fetchPosts on component mount
   }, [dispatch]);
 
