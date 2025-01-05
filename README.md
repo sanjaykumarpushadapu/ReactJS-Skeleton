@@ -193,4 +193,14 @@ This project is licensed under the MIT License.
 
 Contributions, issues, and feature requests are welcome! Feel free to fork this repository and submit pull requests.
 
----
+<!-- ---
+#!/usr/bin/env sh
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# yarn lint && yarn format
+# Run format
+node scripts/format.js
+
+# Run lint
+node scripts/lint.js -->
