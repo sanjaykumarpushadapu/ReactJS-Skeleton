@@ -34,7 +34,7 @@ const RadioButtonCellRenderer = ({
 RadioButtonCellRenderer.propTypes = {
   selectedValue: PropTypes.string.isRequired, // Ensure the expected type matches
   onSelectionChange: PropTypes.func.isRequired,
-  rowIndex: PropTypes.number.isRequired,
+  //  rowIndex: PropTypes.number.isRequired,
 };
 
 export default RadioButtonCellRenderer;

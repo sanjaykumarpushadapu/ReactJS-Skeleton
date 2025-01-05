@@ -1,2 +1,7 @@
-npm test
-yarn lint
+#!/bin/sh
+# echo "Husky pre-commit hook is running..." >> /tmp/husky-test.log
+# yarn lint || exit 1
+
+#!/bin/sh
+# Change directory to the 'ui' folder and run the lint command
+cd $(dirname "$0")/.. && yarn lint

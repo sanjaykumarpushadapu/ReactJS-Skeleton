@@ -9,7 +9,9 @@
     "webpackDev": "node scripts/webpackDev.js",
     "webpackBuild": "node scripts/webpackBuild.js",
     "start": "yarn webpackDev",
-    "build": "yarn webpackBuild"
+    "build": "yarn webpackBuild",
+    "prepare": "husky",
+    "lint": "eslint 'src/**/*.{js,jsx}' --quiet"
   },
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.3",
@@ -50,6 +52,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "globals": "^15.14.0",
     "html-webpack-plugin": "^5.6.3",
+    "husky": "^9.1.7",
     "image-minimizer-webpack-plugin": "^4.1.3",
     "imagemin": "^9.0.0",
     "imagemin-svgo": "^11.0.1",
