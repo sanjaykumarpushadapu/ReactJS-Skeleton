@@ -10,8 +10,7 @@
     "webpackBuild": "node scripts/webpackBuild.js",
     "start": "yarn webpackDev",
     "build": "yarn webpackBuild",
-    "prepare": "husky",
-    "lint": "eslint 'src/**/*.{js,jsx}' --quiet"
+    "prepare": "husky"
   },
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.3",
