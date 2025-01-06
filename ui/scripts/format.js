@@ -18,3 +18,8 @@ function runPrettier() {
 module.exports = {
   runPrettier, // Ensure this is exported
 };
+
+// Execute the linting when the script is directly called
+if (require.main === module) {
+  runPrettier();
+}

@@ -10,8 +10,12 @@ function preBuild() {
   runPrettier();
 
   // Run lint
-  runLint();
+  runLint(false);
 }
 module.exports = {
   preBuild, // Ensure this is exported
 };
+// Execute the linting when the script is directly called
+if (require.main === module) {
+  preBuild();
+}
