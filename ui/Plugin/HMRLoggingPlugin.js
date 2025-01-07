@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const { runPrettier } = require('../scripts/format');
 const { runLint } = require('../scripts/lint');
-const { runStyleLint } = require('../scripts/stylelint');
+const { runStyleLint } = require('../scripts/styleLint');
 class HMRLoggingPlugin {
   constructor() {
     this.isInitialBuild = true; // Tracks if it's the first build

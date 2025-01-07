@@ -1,7 +1,7 @@
 const { checkNodeModules } = require('./checkNodeModules');
 const { runPrettier } = require('./format');
 const { runLint } = require('./lint');
-const { runStyleLint } = require('./stylelint');
+const { runStyleLint } = require('./styleLint');
 function preBuild() {
   // Check node_modules
   checkNodeModules();
