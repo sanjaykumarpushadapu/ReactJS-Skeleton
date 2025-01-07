@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 const { runPrettier } = require('../scripts/format');
 const { runLint } = require('../scripts/lint');
-
+const { runStyleLint } = require('../scripts/stylelint');
 class HMRLoggingPlugin {
   constructor() {
     this.isInitialBuild = true; // Tracks if it's the first build
@@ -19,14 +19,18 @@ class HMRLoggingPlugin {
       console.log(chalk.yellow('HMR triggered. Running Prettier and Lint...'));
 
       // Run Prettier and Lint during HMR updates
-      Promise.all([runPrettier(), runLint(false)])
+      Promise.all([runPrettier(), runLint(false), runStyleLint(false)])
         .then(() =>
           console.log(
-            chalk.green('Prettier and Lint completed successfully during HMR.')
+            chalk.green(
+              'Prettier , Lint and Style lint completed successfully during HMR.'
+            )
           )
         )
         .catch((error) =>
-          console.error(chalk.red('Error during Prettier/Lint in HMR:', error))
+          console.error(
+            chalk.red('Error during Prettier/Lint/Style Lint in HMR:', error)
+          )
         );
     });
 

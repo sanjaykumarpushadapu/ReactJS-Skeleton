@@ -1,7 +1,7 @@
 const { checkNodeModules } = require('./checkNodeModules');
 const { runPrettier } = require('./format');
 const { runLint } = require('./lint');
-
+const { runStyleLint } = require('./stylelint');
 function preBuild() {
   // Check node_modules
   checkNodeModules();
@@ -11,6 +11,9 @@ function preBuild() {
 
   // Run lint
   runLint(false);
+
+  //run style lint
+  runStyleLint(false);
 }
 module.exports = {
   preBuild, // Ensure this is exported

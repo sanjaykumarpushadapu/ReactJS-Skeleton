@@ -1,12 +1,13 @@
 /* Animation mixins */
 @mixin fade-in($duration: 1s) {
-  animation: fadeIn $duration ease-in;
+  animation: fade-in $duration ease-in; /* updated here */
 }
 
-@keyframes fadeIn {
+@keyframes fade-in { /* updated here */
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
