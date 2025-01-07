@@ -2,10 +2,10 @@
 @use '../variables/colors' as *;
 
 body {
+  color: $primary-text-color;
   font-family: 'Helvetica Neue', sans-serif;
   font-size: 1rem; /* 16px */
   line-height: 1.5;
-  color: $primary-text-color;
 }
 
 /* _typography.scss */

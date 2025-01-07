@@ -1,13 +1,13 @@
 {
   "extends": ["stylelint-config-standard", "stylelint-config-recommended-scss"],
-  "plugins": ["stylelint-scss"],
+  "plugins": ["stylelint-order", "stylelint-scss"],
   "rules": {
-    "scss/no-global-function-names": [
-      true,
-      {
-        "ignoreFunctions": ["color.adjust"]
-      }
-    ],
-    "scss/operator-no-unspaced": true
+    "color-no-invalid-hex": true,
+    "declaration-no-important": true,
+    "no-duplicate-selectors": true,
+    "block-no-empty": true,
+    "order/properties-alphabetical-order": true,
+    "selector-no-vendor-prefix": true,
+    "declaration-block-no-duplicate-properties": true
   }
 }
