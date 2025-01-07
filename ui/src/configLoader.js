@@ -19,7 +19,7 @@ const loadConfig = async () => {
 };
 
 const getConfigByKey = async (key) => {
-         const config = await loadConfig();
+  const config = await loadConfig();
   return config[key];
 };
 
