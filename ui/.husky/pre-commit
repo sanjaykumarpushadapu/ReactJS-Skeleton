@@ -16,7 +16,6 @@ node scripts/format.js
 # Execute the lint.js script
 node scripts/lint.js
 
-
 # Execute the styleLint.js script
 node scripts/styleLint.js
 
