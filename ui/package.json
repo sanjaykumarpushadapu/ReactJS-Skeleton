@@ -1,12 +1,12 @@
 {
   "name": "reactjs-skeleton",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/sanjaykumarpushadapu/ReactJS-Skeleton.git",
-  "author": "Sanjay <sanjaykumar.pushadapu@gmail.com>",
+  "main": "index.html",
+  "author": "Sanjay",
   "license": "MIT",
   "scripts": {
-    "webpackDev": "node scripts/webpackDev.js",
+    "preinstall": "node scripts/checkNodeModules.js",
+    "webpackDev": "yarn preinstall && node scripts/webpackDev.js",
     "webpackBuild": "node scripts/webpackBuild.js",
     "start": "yarn webpackDev",
     "build": "yarn webpackBuild",

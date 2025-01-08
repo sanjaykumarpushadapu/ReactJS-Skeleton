@@ -1,32 +1,61 @@
 const fs = require('fs');
+const path = require('path');
 const { execSync } = require('child_process');
 
-// ANSI Escape Codes for colors (using \x1b instead of \033)
+// ANSI Escape Codes for colors
 const RED_BOLD = '\x1b[1;31m';
 const YELLOW = '\x1b[0;33m';
 const GREEN = '\x1b[0;32m';
 const RESET = '\x1b[0m';
-function checkNodeModules() {
-  if (!fs.existsSync('node_modules')) {
-    // Print "node_modules not found!" in bold red
-    console.log(`${RED_BOLD}node_modules not found!${RESET}`);
 
-    // Print "Installing dependencies..." in yellow
+function checkNodeModules() {
+  // Guard: Prevent infinite loop by checking for a flag file
+  const flagPath = path.resolve('.checkNodeModules.lock');
+
+  if (fs.existsSync(flagPath)) {
+    console.log(
+      `${YELLOW}Skipping checkNodeModules to prevent recursion.${RESET}`
+    );
+    return;
+  }
+
+  const nodeModulesPath = path.resolve('node_modules');
+  console.log(
+    `${YELLOW}Checking for node_modules at: ${nodeModulesPath}${RESET}`
+  );
+
+  if (!fs.existsSync(nodeModulesPath)) {
+    console.log(`${RED_BOLD}node_modules not found!${RESET}`);
     console.log(`${YELLOW}Installing dependencies...${RESET}`);
 
     try {
-      // Run yarn install to install missing dependencies
+      // Create a temporary lock file to prevent recursive execution
+      fs.writeFileSync(flagPath, 'LOCK');
+
+      // Run yarn install
       execSync('yarn install', { stdio: 'inherit' });
 
-      // Print success message in green
       console.log(`${GREEN}Dependencies installed successfully!${RESET}`);
-    } catch {
-      // Print error message in red if the install fails
+    } catch (error) {
       console.error(`${RED_BOLD}Error installing dependencies.${RESET}`);
-      process.exit(1);
+      console.error(error.message);
+      process.exit(1); // Exit on error
+    } finally {
+      // Remove the lock file
+      fs.unlinkSync(flagPath);
     }
+  } else {
+    console.log(
+      `${GREEN}node_modules already exists. Skipping installation.${RESET}`
+    );
   }
 }
+
 module.exports = {
-  checkNodeModules, // Ensure this is exported
+  checkNodeModules,
 };
+
+// Execute directly if script is called
+if (require.main === module) {
+  checkNodeModules();
+}
