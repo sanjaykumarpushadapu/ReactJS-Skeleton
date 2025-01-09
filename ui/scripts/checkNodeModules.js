@@ -20,9 +20,6 @@ function checkNodeModules() {
   }
 
   const nodeModulesPath = path.resolve('node_modules');
-  console.log(
-    `${YELLOW}Checking for node_modules at: ${nodeModulesPath}${RESET}`
-  );
 
   if (!fs.existsSync(nodeModulesPath)) {
     console.log(`${RED_BOLD}node_modules not found!${RESET}`);
@@ -44,10 +41,6 @@ function checkNodeModules() {
       // Remove the lock file
       fs.unlinkSync(flagPath);
     }
-  } else {
-    console.log(
-      `${GREEN}node_modules already exists. Skipping installation.${RESET}`
-    );
   }
 }
 
