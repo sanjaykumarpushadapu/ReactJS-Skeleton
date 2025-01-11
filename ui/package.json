@@ -5,6 +5,7 @@
   "author": "Sanjay",
   "license": "MIT",
   "scripts": {
+    "install-safe": "node scripts/check-vulnerabilities.js",
     "start": "node scripts/webpackDev.js",
     "build": "node scripts/webpackBuild.js",
     "prepare": "husky"
