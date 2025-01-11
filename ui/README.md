@@ -31,7 +31,7 @@ cd your-repo-name
 Make sure you have Yarn installed globally:
 
 ```bash
-npm install -g yarn
+npm install -g yarn@berry
 ```
 
 Then install project dependencies:
