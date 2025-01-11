@@ -5,7 +5,6 @@
   "author": "Sanjay",
   "license": "MIT",
   "scripts": {
-    "preinstall": "node scripts/checkNodeModules.js",
     "webpackDev": "yarn preinstall && node scripts/webpackDev.js",
     "webpackBuild": "node scripts/webpackBuild.js",
     "start": "yarn webpackDev",
