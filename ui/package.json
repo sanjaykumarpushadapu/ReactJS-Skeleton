@@ -5,10 +5,8 @@
   "author": "Sanjay",
   "license": "MIT",
   "scripts": {
-    "webpackDev": "node scripts/webpackDev.js",
-    "webpackBuild": "node scripts/webpackBuild.js",
-    "start": "yarn webpackDev",
-    "build": "yarn webpackBuild",
+    "start": "node scripts/webpackDev.js",
+    "build": "node scripts/webpackBuild.js",
     "prepare": "husky"
   },
   "dependencies": {

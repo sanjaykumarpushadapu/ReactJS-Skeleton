@@ -9,9 +9,7 @@ const runCommand = (command) => {
     process.exit(1);
   }
 };
-
 // Run common tasks: check node_modules, format, lint
 preBuild();
-
 // Start Webpack in development mode
-runCommand('webpack serve --mode development --open');
+runCommand('npx webpack serve --mode development --open');
