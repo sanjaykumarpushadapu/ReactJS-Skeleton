@@ -14,4 +14,4 @@ const runCommand = (command) => {
 preBuild();
 
 // Build Webpack in production mode
-runCommand('webpack --mode production');
+runCommand('npx webpack --mode production');

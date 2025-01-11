@@ -28,22 +28,16 @@ cd your-repo-name
 
 ### 2. Install Dependencies
 
-Make sure you have Yarn installed globally:
-
-```bash
-npm install -g yarn@berry
-```
-
 Then install project dependencies:
 
 ```bash
-yarn install
+npm install
 ```
 
 ### 3. Run the Development Server
 
 ```bash
-yarn start
+npm start
 ```
 
 This will:
@@ -62,7 +56,7 @@ Here are the key scripts defined in `package.json`:
 - **Start Development Server**:
 
   ```bash
-  yarn start
+  npm start
   ```
 
   Runs Prettier to format your code, ESLint to fix linting issues, and starts the development server.
@@ -70,34 +64,10 @@ Here are the key scripts defined in `package.json`:
 - **Build for Production**:
 
   ```bash
-  yarn build
+  npm run build
   ```
 
   Formats the code, fixes linting issues, and builds the application for production.
-
-- **Run ESLint**:
-
-  ```bash
-  yarn lint
-  ```
-
-  Automatically fixes linting issues (if possible) and suppresses non-critical output.
-
-- **Run Prettier**:
-
-  ```bash
-  yarn format
-  ```
-
-  Formats your code using Prettier, with output suppressed.
-
-- **Check Prettier Formatting**:
-  ```bash
-  yarn format:check
-  ```
-  Verifies if the code is formatted according to Prettier's rules without making changes.
-
----
 
 ## 🚩 ESLint and Prettier
 
@@ -178,7 +148,7 @@ Key features of the `webpack.config.js`:
 To check for vulnerabilities in your dependencies:
 
 ```bash
-yarn audit
+npm audit
 ```
 
 ---
