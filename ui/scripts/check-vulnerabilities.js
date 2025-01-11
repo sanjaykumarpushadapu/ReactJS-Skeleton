@@ -1,53 +1,53 @@
 const { execSync } = require('child_process');
+const chalk = require('chalk'); // Install chalk: npm install chalk
 
 try {
-  console.log('Running npm audit...');
+  console.log(chalk.bold.blue('\nRunning npm audit...\n'));
   const result = execSync('npm audit --json').toString();
   const auditResult = JSON.parse(result);
 
-  // Check for metadata and vulnerabilities
   if (auditResult.metadata && auditResult.metadata.vulnerabilities) {
     const { info, low, moderate, high, critical, total } = auditResult.metadata.vulnerabilities;
-    console.log('Vulnerability Summary:');
-    console.log(`  Info: ${info}`);
-    console.log(`  Low: ${low}`);
-    console.log(`  Moderate: ${moderate}`);
-    console.log(`  High: ${high}`);
-    console.log(`  Critical: ${critical}`);
-    console.log(`  Total: ${total}`);
+
+    console.log(chalk.bold.green('Audit Completed Successfully!\n'));
+    console.log(chalk.bold('Vulnerability Summary:'));
+    console.log(chalk.cyan(`  Info:      ${info}`));
+    console.log(chalk.blue(`  Low:       ${low}`));
+    console.log(chalk.yellow(`  Moderate:  ${moderate}`));
+    console.log(chalk.red(`  High:      ${high}`));
+    console.log(chalk.bold.red(`  Critical:  ${critical}`));
+    console.log(chalk.bold(`  Total:     ${total}\n`));
   } else {
-    console.log('No vulnerabilities found in metadata.');
+    console.log(chalk.bold.green('No vulnerabilities found in metadata!\n'));
   }
-
-  // Optionally, log the full result for debugging
-  // console.log(JSON.stringify(auditResult, null, 2));
 } catch (error) {
-  console.error('Error running audit:');
-  console.error(error.message);
+  console.error(chalk.bold.red('\nError running audit:'));
+  console.error(chalk.red(error.message));
 
-  // Display stdout and stderr for troubleshooting
   if (error.stdout) {
-   
+    console.log(chalk.bold.yellow('\nParsing audit results from error output...\n'));
     try {
       const auditResult = JSON.parse(error.stdout.toString());
       if (auditResult.metadata && auditResult.metadata.vulnerabilities) {
         const { info, low, moderate, high, critical, total } = auditResult.metadata.vulnerabilities;
-        console.log('Vulnerability Summary (from error):');
-        console.log(`  Info: ${info}`);
-        console.log(`  Low: ${low}`);
-        console.log(`  Moderate: ${moderate}`);
-        console.log(`  High: ${high}`);
-        console.log(`  Critical: ${critical}`);
-        console.log(`  Total: ${total}`);
+
+        console.log(chalk.bold('Vulnerability Summary (from error):'));
+        console.log(chalk.cyan(`  Info:      ${info}`));
+        console.log(chalk.blue(`  Low:       ${low}`));
+        console.log(chalk.yellow(`  Moderate:  ${moderate}`));
+        console.log(chalk.red(`  High:      ${high}`));
+        console.log(chalk.bold.red(`  Critical:  ${critical}`));
+        console.log(chalk.bold(`  Total:     ${total}\n`));
       } else {
-        console.log('No vulnerabilities found in metadata (from error output).');
+        console.log(chalk.bold.green('No vulnerabilities found in metadata (from error output).\n'));
       }
     } catch (parseError) {
-      console.error('Failed to parse audit JSON from stdout.');
+      console.error(chalk.bold.red('Failed to parse audit JSON from stdout.'));
     }
   }
 
   if (error.stderr) {
-    console.log('stderr Error :', error.stderr.toString());
+    console.log(chalk.bold.red('\nError Details:\n'));
+    console.log(error.stderr.toString());
   }
 }
